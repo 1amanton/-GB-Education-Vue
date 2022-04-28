@@ -15,10 +15,20 @@
 
         <div class="cost__input">
           <label for="pay__category">Category</label>
-          <input type="text" id="pay__category"
-                 v-model.trim="newCost.category"
-          >
+          <br>
+          <select id="pay__category" v-model="newCost.category" v-if="categoryList">
+            <option v-for="(category, idx) in categoryList"
+                    :key="idx"
+            > {{ category }}</option>
+          </select>
         </div>
+
+<!--        <div class="cost__input">-->
+<!--          <label for="pay__category">Category</label>-->
+<!--          <input type="text" id="pay__category"-->
+<!--                 v-model.trim="newCost.category"-->
+<!--          >-->
+<!--        </div>-->
 
         <div class="cost__input">
           <label for="pay__money">How many money $ ?</label>
@@ -34,6 +44,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   name: "CostsForm",
   props:["list"],
@@ -43,11 +55,15 @@ export default {
       newCost: {
         desc: "",
         category:"",
-        money: ""
+        money: 0
       },
     }
   },
   computed: {
+    ...mapGetters({
+      categoryList: "getCategoryList"
+    }),
+
     getCurrentDate() {
       return new Intl.DateTimeFormat('en-GB').format(new Date())
     }
@@ -62,9 +78,13 @@ export default {
         category: this.newCost.category,
         value: this.newCost.money
       }
-      console.log(obj)
-      this.$emit("addNewCost", obj)
+
+      this.$store.commit("addDataToPaymentList", obj)
     }
+  },
+
+  async created() {
+    await this.$store.dispatch("fetchCategoryList")
   }
 }
 </script>
@@ -98,4 +118,7 @@ export default {
 
 #show
   margin-bottom: 32px
+
+select
+  width: 175px
 </style>

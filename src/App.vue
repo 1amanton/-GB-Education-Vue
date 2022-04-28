@@ -3,8 +3,13 @@
     <span id="app-title">My Personal Costs</span>
     <div class="costs">
       <div class="costs__left">
-        <CostsForm @addNewCost="addCostList" :list="costList"/>
-        <CostsList :list="costList"/>
+        <CostsForm :list="list"/>
+        <div id="total">Total costs : {{ getFPV }}</div>
+        <CostsList :list="currentElements"/>
+        <MyPagination
+            :currentPage="currentPage" :showElements="showElements" :length="list.length"
+            @changePage="changePage"
+        />
       </div>
       <CostsStats/>
     </div>
@@ -14,60 +19,45 @@
 <script>
 import CostsList from './components/CostsList'
 import CostsStats from './components/CostsStats'
+import MyPagination from './components/MyPagination'
 import CostsForm from '@/components/CostsForm'
+import {mapGetters} from "vuex";
 
 export default {
   name: 'App',
   components: {
     CostsList,
     CostsStats,
-    CostsForm
+    CostsForm,
+    MyPagination
   },
   data() {
     return {
-      costList: []
+      currentPage: 1,
+      showElements: 5
     }
   },
-  methods: {
-    fetchData() {
-      return [
-        {
-          id: 1,
-          dateCreated: "21/04/2022",
-          desc: "Завтрак",
-          category: "Food",
-          value: 199
-        },
-        {
-          id: 2,
-          dateCreated: "22/04/2022",
-          desc: "Метро",
-          category: "Transport",
-          value: 49
-        },
-        {
-          id: 3,
-          dateCreated: "23/04/2022",
-          desc: "Тренировка",
-          category: "Sport",
-          value: 99
-        },
-        {
-          id: 4,
-          dateCreated: "24/04/2022",
-          desc: "Футболка",
-          category: "Cloth",
-          value: 129
-        }
-      ]
+
+  computed: {
+    getFPV() {
+      return this.$store.getters.getFullPaymentValue
     },
-    addCostList(obj) {
-      console.log("clicked")
-      this.costList.push(obj)
+    ...mapGetters({
+      list: "getPaymentList"
+    }),
+
+    currentElements() {
+      return this.list.slice(this.showElements * (this.currentPage - 1), this.showElements * (this.currentPage - 1) + this.showElements)
     }
   },
-  created() {
-    this.costList = this.fetchData()
+
+  methods: {
+    changePage(page) {
+      this.currentPage = page
+    }
+  },
+  async created() {
+    await this.$store.dispatch("fetchPaymentList")
   }
 }
 </script>
@@ -90,6 +80,10 @@ export default {
   width: 100%
   &__left
     width: 70%
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
 
 #app-title
   font-size: 48px
@@ -98,4 +92,10 @@ export default {
   padding: 8px 0
   margin-bottom: 32px
   font-weight: bold
+
+#total
+  margin-bottom: 16px
+  font-weight: bold
+  font-size: 20px
+  border-bottom: 1px solid grey
 </style>
