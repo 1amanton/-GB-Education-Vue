@@ -33,7 +33,7 @@ export default new Vuex.Store ({
         fetchCategoryList({commit}) {
             return new Promise(resolve => {
                 setTimeout(() => {
-                    resolve(["Food", "Transport", "Sport", "Cloth"])
+                    resolve(["Food", "Transport", "Sport", "Cloth", "Entertainment"])
                 }, 1000)
             })
                 .then(res => {

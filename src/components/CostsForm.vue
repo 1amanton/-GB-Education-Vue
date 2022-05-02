@@ -61,18 +61,23 @@ export default {
   },
   computed: {
     ...mapGetters({
-      categoryList: "getCategoryList"
+      categoryList: "getCategoryList",
     }),
 
     getCurrentDate() {
       return new Intl.DateTimeFormat('en-GB').format(new Date())
+    },
+
+    getRandomInt() {
+     return  Math.round(Date.now() * Math.random())
     }
 
   },
   methods: {
     addNew() {
       const obj = {
-        id: this.list.length +1,
+        // id: this.list.length +1,
+        id: this.getRandomInt,
         dateCreated: this.getCurrentDate,
         desc: this.newCost.desc,
         category: this.newCost.category,
@@ -85,6 +90,20 @@ export default {
 
   async created() {
     await this.$store.dispatch("fetchCategoryList")
+  },
+
+  mounted() {
+
+    const {category, section} = this.$route.params
+    const {value} = this.$route.query
+
+    if(!category || !section || !value) return
+
+    this.newCost.category = category
+    this.newCost.money = value
+    this.addNew()
+
+
   }
 }
 </script>
