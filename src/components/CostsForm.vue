@@ -51,7 +51,7 @@ export default {
   props:["list"],
   data() {
     return {
-      showForm: false,
+      showForm: true,
       newCost: {
         desc: "",
         category:"",

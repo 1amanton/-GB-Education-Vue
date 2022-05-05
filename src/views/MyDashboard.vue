@@ -3,7 +3,9 @@
     <span id="dashboard-title">My Personal Costs</span>
     <div class="costs">
       <div class="costs__left">
-        <CostsForm :list="list"/>
+
+        <button @click="openModalForm">Add New Payment</button>
+
         <div id="total">Total costs : {{ getFPV }}</div>
         <CostsList :list="currentElements"/>
         <MyPagination
@@ -20,7 +22,6 @@
 import {mapGetters} from "vuex";
 import CostsList from "@/components/CostsList";
 import CostsStats from "@/components/CostsStats";
-import CostsForm from "@/components/CostsForm";
 import MyPagination from "@/components/MyPagination";
 
 export default {
@@ -29,7 +30,6 @@ export default {
   components: {
     CostsList,
     CostsStats,
-    CostsForm,
     MyPagination
   },
 
@@ -56,6 +56,10 @@ export default {
   methods: {
     changePage(page) {
       this.currentPage = page
+    },
+
+    openModalForm() {
+      this.$modal.show("addform", {title: "Add New Payment", component: "CostsForm"})
     }
   },
 
@@ -98,4 +102,14 @@ export default {
   font-weight: bold
   font-size: 20px
   border-bottom: 1px solid grey
+
+button
+  background-color: aquamarine
+  padding: 12px 16px
+  font-weight: 700
+  margin-bottom: 16px
+  cursor: pointer
+  margin-bottom: 64px
+  &:hover
+    background-color: #12d993
 </style>

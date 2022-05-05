@@ -1,9 +1,11 @@
 <template>
   <div>
     <h1>SETTINGS PAGE</h1>
-    <button @click="goPage">go to page 3</button>
 
+    <button @click="openModalAuthForm">Auth Form</button>
     <hr>
+
+    <button @click="goPage">go to page 3</button>
     <hr>
 
     <router-link :to="{
@@ -38,6 +40,7 @@
         value: 2000
       }
     }">Entertainment 2000</router-link>
+
   </div>
 </template>
 
@@ -53,6 +56,10 @@ export default {
           page: 3
         }
       })
+    },
+
+    openModalAuthForm() {
+      this.$modal.show("auth", {title: "Autn Form", component: "AuthForm"})
     }
   }
 }

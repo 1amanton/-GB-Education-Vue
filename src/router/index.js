@@ -2,8 +2,6 @@ import Vue from "vue";
 import Router from "vue-router"
 
 import MyDashboard from "@/views/MyDashboard";
-import MySettings from "@/views/MySettings";
-import NotFound from "@/views/NotFound";
 import CostsForm from "@/components/CostsForm";
 
 Vue.use(Router)
@@ -17,17 +15,17 @@ const routes = [
     {
         path: "/dashboard/:page",
         name: "Dashboard",
-        component: MyDashboard
+        component: () => import(/*webpackChunkName: "PageDashboard" */ "@/views/MyDashboard")
     },
     {
         path: "/settings*",
         name: "MySettings",
-        component: MySettings
+        component: () => import(/*webpackChunkName: "MySettings" */ "@/views/MySettings")
     },
     {
         path: "/notfound",
         name: "NotFound",
-        component: NotFound
+        component: () => import(/*webpackChunkName: "NotFound" */ "@/views/NotFound")
     },
     {
         path: "/add/:section/:category",
@@ -39,6 +37,7 @@ const routes = [
         redirect: {name: "NotFound"}
     }
 ]
+
 const router = new Router({
     mode: "history",
     routes
