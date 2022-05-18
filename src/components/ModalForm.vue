@@ -3,7 +3,9 @@
     <div class="header">{{ settings.title }}</div>
 
     <div class="content">
-      <component :is="settings.component"/>
+      <component
+          :is="settings.component"
+          :values="settings.props"/>
     </div>
 
     <div class="footer">
@@ -21,9 +23,11 @@ export default {
   components: {
     CostsForm: () => import(/*webpackChunkName: "NewPayment" */"@/components/CostsForm"),
     AuthForm: () => import(/*webpackChunkName: "Auth" */"@/components/AuthForm")},
+
   props: {
     settings: Object
   },
+
   methods: {
     onClick() {
       this.$modal.hide()

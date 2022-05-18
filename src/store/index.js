@@ -10,6 +10,21 @@ const mutations = {
     addDataToPaymentList(state, payload) {
         state.paymentList.push(payload)
     },
+    deleteDataFromPaymentList(state, payload) {
+        state.paymentList = state.paymentList.filter(el => el.id !== payload.id)
+    },
+    setChangeToPaymentList(state, payload) {
+        let findedEl = state.paymentList.find(el => el.id === payload.id)
+        console.log("FINDED EL", findedEl, "CHANGED EL", payload)
+
+        findedEl.value = payload.money
+        findedEl.category = payload.category
+        findedEl.desc = payload.desc
+
+        console.log('ПОСЛЕ ИЗМЕНЕНИЙ')
+        console.log(state.paymentList)
+
+    },
     setCategoryList(state, payload) {
         state.categoryList = payload
     }

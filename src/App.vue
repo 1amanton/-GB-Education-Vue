@@ -13,10 +13,16 @@
       <ModalForm :settings="settings" v-if="modalShow"/>
     </transition>
 
+<!--    <transition name="fade">-->
+<!--      <ContextMenu/>-->
+<!--    </transition>-->
+
+
   </div>
 </template>
 
 <script>
+// import ContextMenu from "@/components/ContextMenu";
 export default {
   name: 'App',
   data() {
@@ -28,6 +34,7 @@ export default {
     }
   },
   components: {
+    // ContextMenu,
     ModalForm: () => import(/*webpackChunkName: "ModalForm" */"@/components/ModalForm")
   },
 
@@ -48,10 +55,13 @@ export default {
   mounted() {
     this.$modal.EventBus.$on("show", this.onShow)
     this.$modal.EventBus.$on("hide", this.onHide)
+    this.$contextMenu.EventBus.$on("hide", this.onHide)
+    this.$contextMenu.hide()
   },
   beforeDestroy() {
     this.$modal.EventBus.$off("show", this.onShow)
     this.$modal.EventBus.$off("hide", this.onHide)
+    this.$contextMenu.EventBus.$off("hide", this.onHide)
   }
 }
 </script>
@@ -79,7 +89,7 @@ header
 
 
 .fade-enter-active, .fade-leave-active
-  transition: opacity .5s
+  transition: opacity 0.7s
 
 .fade-enter, .fade-leave-to
   opacity: 0

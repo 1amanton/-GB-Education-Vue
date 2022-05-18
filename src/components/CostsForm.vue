@@ -23,13 +23,6 @@
           </select>
         </div>
 
-<!--        <div class="cost__input">-->
-<!--          <label for="pay__category">Category</label>-->
-<!--          <input type="text" id="pay__category"-->
-<!--                 v-model.trim="newCost.category"-->
-<!--          >-->
-<!--        </div>-->
-
         <div class="cost__input">
           <label for="pay__money">How many money $ ?</label>
           <input type="number" id="pay__money"
@@ -37,7 +30,7 @@
           >
         </div>
 
-        <button @click.prevent="addNew">ADD NEW</button>
+        <button @click.prevent="addNew">SAVE</button>
       </form>
     </div>
   </div>
@@ -48,20 +41,25 @@ import {mapGetters} from "vuex";
 
 export default {
   name: "CostsForm",
-  props:["list"],
+  props:{
+    // list: Object,
+    values: Object
+  },
   data() {
     return {
       showForm: true,
       newCost: {
         desc: "",
         category:"",
-        money: 0
+        money: 0,
+        dateCreated: ""
       },
     }
   },
   computed: {
     ...mapGetters({
       categoryList: "getCategoryList",
+      getPaymentList: "getPaymentList"
     }),
 
     getCurrentDate() {
@@ -76,7 +74,6 @@ export default {
   methods: {
     addNew() {
       const obj = {
-        // id: this.list.length +1,
         id: this.getRandomInt,
         dateCreated: this.getCurrentDate,
         desc: this.newCost.desc,
@@ -84,7 +81,23 @@ export default {
         value: this.newCost.money
       }
 
-      this.$store.commit("addDataToPaymentList", obj)
+      if(this.getPaymentList.find(el => el.id === this.newCost.id)) {
+        console.log("в листе есть такой уже")
+        this.$modal.hide()
+      } else {
+        this.$store.commit("addDataToPaymentList", obj)
+        this.$modal.hide()
+      }
+
+    }
+  },
+
+  watch: {
+    newCost: {
+      handler(newValue) {
+        this.$store.commit("setChangeToPaymentList", newValue)
+      },
+      deep: true
     }
   },
 
@@ -94,6 +107,23 @@ export default {
 
   mounted() {
 
+    if(this.values?.item) {
+      const {category, dateCreated, desc, value, id} = this.values?.item
+
+
+      this.newCost.category = category
+      this.newCost.dateCreated = dateCreated
+      this.newCost.desc = desc
+      this.newCost.money = value
+      this.newCost.id = id
+
+      const newObj = this.newCost
+
+      this.$store.commit("setChangeToPaymentList", newObj)
+
+      return
+    }
+
     const {category, section} = this.$route.params
     const {value} = this.$route.query
 
@@ -102,8 +132,6 @@ export default {
     this.newCost.category = category
     this.newCost.money = value
     this.addNew()
-
-
   }
 }
 </script>
