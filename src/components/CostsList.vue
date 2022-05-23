@@ -1,32 +1,40 @@
 <template>
-  <div class="cost">
-    <div class="cost__item__title">
-      <span class="cost__item__id">ID</span>
-      <span class="cost__item__desc">DESCRIPTION</span>
-      <span class="cost__item__date">DATE</span>
-      <span class="cost__item__cat">CATEGORY</span>
-      <span class="cost__item__money">$</span>
-      <span class="cost__item__money">...</span>
-    </div>
+  <v-container>
+    <v-row class="amber">
+      <v-col :cols="1">#</v-col>
+      <v-col :cols="3">Date</v-col>
+      <v-col :cols="3">Desc</v-col>
+      <v-col :cols="2">Category</v-col>
+      <v-col :cols="2">Money</v-col>
+      <v-col :cols="1">Edit</v-col>
+    </v-row>
 
-    <div class="cost__list">
-      <div class="cost__item"
-           v-for="(item,index) in list"
-           :key="index"
-      >
-        <span>{{ item.id }}</span>
-        <span>{{ item.desc }}</span>
-        <span>{{ item.dateCreated }}</span>
-        <span>{{ item.category }}</span>
-        <span>{{ item.value }}</span>
-        <span class="cursor" @click="onContextMenuClick($event, item)">...</span>
+    <v-row class="monochrome"
+        v-for="(item,index) in list"
+        :key="index"
+    >
+      <v-col :cols="1">{{ item.id }}</v-col>
+      <v-col :cols="3">{{ item.dateCreated }}</v-col>
+      <v-col :cols="3">{{ item.desc }}</v-col>
+      <v-col :cols="2">{{ item.category }}</v-col>
+      <v-col :cols="2">{{ item.value }}</v-col>
+      <v-col :cols="1" class="text-center cursor"
+             @click="onContextMenuClick($event, item)"
+      >*</v-col>
+    </v-row>
+
+
+    <div class="cost">
+      <div class="cost__list">
+
+        <transition name="fade">
+          <ContextMenu/>
+        </transition>
+
       </div>
-      <transition name="fade">
-        <ContextMenu/>
-      </transition>
     </div>
 
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -54,6 +62,9 @@ export default {
     deleteItem(item) {
       console.log("From delete item", item)
       this.$store.commit("deleteDataFromPaymentList", item)
+      // this.$store.commit("setAvailableCategoryList")
+
+
       this.$contextMenu.hide()
 
     },
@@ -67,7 +78,7 @@ export default {
       this.$contextMenu.show({event, items})
 
     }
-  }
+  },
 }
 </script>
 
@@ -99,4 +110,9 @@ export default {
 
 .cursor
   cursor: pointer
+
+
+
+.monochrome:nth-child(odd)
+  background-color: #919191
 </style>

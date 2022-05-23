@@ -1,16 +1,19 @@
 import Vue from "vue";
 import Router from "vue-router"
 
-import MyDashboard from "@/views/MyDashboard";
+// import MyDashboard from "@/views/MyDashboard";
 import CostsForm from "@/components/CostsForm";
+import DashboardView from "@/views/DashboardView";
 
 Vue.use(Router)
 
 const routes = [
     {
         path: "/",
-        name: "Home",
-        component: MyDashboard
+        // name: "Home",
+        name: "DashboardView",
+        // component: MyDashboard
+        component: DashboardView
     },
     {
         path: "/dashboard/:page",

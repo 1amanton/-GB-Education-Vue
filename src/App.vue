@@ -1,57 +1,47 @@
 <template>
-  <div id="app">
+  <v-app>
 
-    <header>
-      <router-link :to="{name: 'Dashboard', params: {page: '1'}}">Dashboard</router-link> /
-      <router-link to="/settings">Settings</router-link> /
-      <router-link to="/notfound">Not found</router-link>
-    </header>
+    <v-app-bar app
+               flat
+               class="d-flex justify-center"
+               color="cyan lighten-3"
+    >
+      <v-btn to="/" class="mr-8">Dashboard</v-btn>
+      <v-btn to="/settings">Settings</v-btn>
 
-    <router-view/>
+    </v-app-bar>
 
-    <transition name="fade">
+    <v-main>
+      <router-view/>
       <ModalForm :settings="settings" v-if="modalShow"/>
-    </transition>
+    </v-main>
 
-<!--    <transition name="fade">-->
-<!--      <ContextMenu/>-->
-<!--    </transition>-->
-
-
-  </div>
+  </v-app>
 </template>
 
 <script>
-// import ContextMenu from "@/components/ContextMenu";
+
 export default {
   name: 'App',
-  data() {
-    return {
-      settings: {
-
-      },
-      modalShow: false
-    }
-  },
   components: {
-    // ContextMenu,
     ModalForm: () => import(/*webpackChunkName: "ModalForm" */"@/components/ModalForm")
   },
 
+  data: () => ({
+    settings: {},
+    modalShow: false
+  }),
   methods: {
     onShow(data) {
       this.modalShow = true
       this.settings = data
       console.log(data)
     },
-
     onHide() {
       this.settings = {}
       this.modalShow = false
     }
-
   },
-
   mounted() {
     this.$modal.EventBus.$on("show", this.onShow)
     this.$modal.EventBus.$on("hide", this.onHide)
@@ -63,36 +53,5 @@ export default {
     this.$modal.EventBus.$off("hide", this.onHide)
     this.$contextMenu.EventBus.$off("hide", this.onHide)
   }
-}
+};
 </script>
-
-<style lang="sass">
-*
-  margin: 0
-  padding: 0
-  box-sizing: border-box
-
-#app
-  font-family: Avenir, Helvetica, Arial, sans-serif
-  -webkit-font-smoothing: antialiased
-  -moz-osx-font-smoothing: grayscale
-  text-align: center
-
-header
-  padding: 32px
-  & a
-    font-weight: bold
-    color: #2b6c9b
-    &.router-link-exact-active
-      color: green
-
-
-
-.fade-enter-active, .fade-leave-active
-  transition: opacity 0.7s
-
-.fade-enter, .fade-leave-to
-  opacity: 0
-
-
-</style>

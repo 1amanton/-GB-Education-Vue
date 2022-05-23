@@ -1,9 +1,10 @@
 <template>
-  <div v-if="showMenu" class="menu" :style="getStyles">
-    <div v-for="item in items" :key="item.text" @click="onClick(item)" class="menu__item">
-      {{item.text}}
+  <div class="abs" :style="getStyles">
+    <div v-if="showMenu" class="menu">
+      <div v-for="item in items" :key="item.text" @click="onClick(item)" class="menu__item">
+        {{item.text}}
+      </div>
     </div>
-
   </div>
 
 </template>
@@ -23,9 +24,8 @@ export default {
   computed: {
     getStyles() {
       return {
-        // top: `${this.xPos + 10}px`,
-        left: `${this.yPos}px`,
-        color: `white`
+        top: `${this.yPos - 64}px`,
+        left: `${this.xPos + 72}px`,
       }
     }
   },
@@ -63,20 +63,23 @@ export default {
     this.$contextMenu.EventBus.$off("hide", this.onHide)
   },
 
-
-
 }
 
 </script>
 
 <style scoped lang="sass">
-.menu
+.abs
   position: absolute
-  background-color: green
-  padding: 8px
+  clip-path: polygon(90% 0, 100% 10%, 100% 100%, 20% 100%, 10% 90%, 10% 10%, 0 0)
+.menu
+  background-color: darkgrey
+  padding: 8px 8px 8px 16px
   &__item
     cursor: pointer
     padding: 4px
     border-bottom: 1px black solid
+    font-weight: bold
+    &:hover
+      color: forestgreen
 
 </style>

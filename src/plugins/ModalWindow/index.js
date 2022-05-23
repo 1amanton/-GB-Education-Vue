@@ -9,7 +9,7 @@ export default {
 
             show(name, settings){
                 this.EventBus.$emit("show", {name, ...settings})
-                console.log("show", name, settings)
+                // console.log("show", name, settings)
 
             },
 

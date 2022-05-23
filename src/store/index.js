@@ -12,6 +12,7 @@ const mutations = {
     },
     deleteDataFromPaymentList(state, payload) {
         state.paymentList = state.paymentList.filter(el => el.id !== payload.id)
+        console.log(state.availableCategoryList)
     },
     setChangeToPaymentList(state, payload) {
         let findedEl = state.paymentList.find(el => el.id === payload.id)
@@ -32,16 +33,52 @@ const mutations = {
 
 const getters = {
     getPaymentList: state => state.paymentList,
+    getCategoryList: state => state.categoryList,
+
     getFullPaymentValue: state => {
         return state.paymentList.reduce((res, cur) => res + cur.value, 0)
     },
-    getCategoryList: state => state.categoryList
+
+    getAvailableCategoryList: state => {
+        console.log("get Available CategoryList")
+        let c = []
+        state.paymentList.forEach(el => {
+            if(c.find(item => item === el.category)) {
+                console.log("Категория уже есть в списке")
+            } else {
+                c.push(el.category)
+            }
+        })
+        return c
+    },
+
+
+
+    getCountCategory: state => {
+        console.log("availableCategoryList:", state.availableCategoryList)
+
+        this.categoryList.forEach(category => {
+            let eachCategory = state.paymentList.reduce((items, payment) => {
+                if(payment.category === category) {
+                    // console.log(category)
+                    items.push(payment)
+                }
+                return items
+            }, [])
+
+            console.log("eachCategory", eachCategory)
+            console.log("eachCategory length", eachCategory.length)
+
+        })
+    },
+
 }
 
 export default new Vuex.Store ({
     state: {
         paymentList: [],
-        categoryList: []
+        categoryList: [],
+        availableCategoryList: []
     },
     mutations,
     actions: {
@@ -55,6 +92,7 @@ export default new Vuex.Store ({
                     commit("setCategoryList", res)
                 })
         },
+
         fetchPaymentList({commit}) {
             return new Promise(resolve => {
                 setTimeout(() => {
@@ -70,8 +108,8 @@ export default new Vuex.Store ({
                             {
                                 id: 2,
                                 dateCreated: "22/04/2022",
-                                desc: "Метро",
-                                category: "Transport",
+                                desc: "Кино",
+                                category: "Entertainment",
                                 value: 49
                             },
                             {
@@ -171,6 +209,27 @@ export default new Vuex.Store ({
                                 desc: "Футболка",
                                 category: "Cloth",
                                 value: 129
+                            },
+                            {
+                                id: 17,
+                                dateCreated: "22/04/2022",
+                                desc: "Метро",
+                                category: "Transport",
+                                value: 49
+                            },
+                            {
+                                id: 18,
+                                dateCreated: "23/04/2022",
+                                desc: "Тренировка",
+                                category: "Sport",
+                                value: 99
+                            },
+                            {
+                                id: 19,
+                                dateCreated: "23/04/2022",
+                                desc: "Тренировка",
+                                category: "Sport",
+                                value: 99
                             }
                         ]
                     )

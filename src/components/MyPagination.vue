@@ -1,17 +1,21 @@
 <template>
-  <div :class="[$style.wrp]">
-    <div @click="onClick(currentPage - 1)">-</div>
 
-    <div
-        v-for="i in amount"
-        :key="i"
-        :class="{[$style.active]: currentPage === i}"
-        @click="onClick(i)"
-    >{{ i }}
-    </div>
+  <div>
+    <v-pagination
+        v-model="page"
+        :length=amount
 
-    <div @click="onClick(currentPage + 1)">+</div>
+        @next="onClick(page, 'next')"
+        @previous="onClick(page, 'prev')"
+        @input="onClick(page, 'INPUT PAGE')"
+
+
+        prev-icon="mdi-menu-left"
+        next-icon="mdi-menu-right"
+    ></v-pagination>
+
   </div>
+
 </template>
 
 <script>
@@ -22,16 +26,21 @@ export default {
     showElements: Number,
     currentPage: Number
   },
+  data() {
+    return {
+      page: 1
+    }
+  },
   computed: {
     amount() {
       return Math.ceil(this.length / this.showElements)
     }
   },
+
   methods:{
-    onClick(page) {
-      if(page < 1 || page > this.amount) {
-        return
-      }
+
+    onClick(page, tag) {
+      console.log("CLICKED PAG",tag, page)
       this.$emit("changePage", page)
     }
   }

@@ -107,9 +107,9 @@ button
   background-color: aquamarine
   padding: 12px 16px
   font-weight: 700
-  margin-bottom: 16px
   cursor: pointer
   margin-bottom: 64px
   &:hover
     background-color: #12d993
+
 </style>

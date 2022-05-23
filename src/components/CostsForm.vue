@@ -1,39 +1,53 @@
 <template>
-  <div class="cost__add">
-    <button id="show" @click="showForm = !showForm">ADD NEW COST +</button>
+  <v-card>
+    <v-card-title class="text-h5 cyan">
+      ADD NEW PAYMENT
+    </v-card-title>
 
-    <div class="cost__form"
-         v-if="showForm"
-    >
+    <v-card-text class="mt-8">
       <form action="">
-        <div class="cost__input">
-          <label for="pay__desc">Description</label>
-          <input type="text" id="pay__desc"
-                 v-model.trim="newCost.desc"
-          >
-        </div>
 
-        <div class="cost__input">
-          <label for="pay__category">Category</label>
-          <br>
-          <select id="pay__category" v-model="newCost.category" v-if="categoryList">
-            <option v-for="(category, idx) in categoryList"
-                    :key="idx"
-            > {{ category }}</option>
-          </select>
-        </div>
+        <v-text-field
+            label="Description"
+            placeholder="Spend money on..."
 
-        <div class="cost__input">
-          <label for="pay__money">How many money $ ?</label>
-          <input type="number" id="pay__money"
-                 v-model.trim.number="newCost.money"
-          >
-        </div>
+            :rules="[v => v.length >= 4 || 'Min 4 characters']"
+            outlined
+            v-model.trim="newCost.desc"
+        ></v-text-field>
 
-        <button @click.prevent="addNew">SAVE</button>
+        <v-text-field
+            label="How many money $ ?"
+            placeholder="Placeholder"
+            type="number"
+            hide-spin-buttons
+            outlined
+            v-model.trim.number="newCost.money"
+        ></v-text-field>
+
+
+        <v-select
+            :items="categoryList"
+            label="Category"
+            outlined
+        ></v-select>
+
       </form>
-    </div>
-  </div>
+    </v-card-text>
+
+    <v-divider></v-divider>
+
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn
+          color="cyan"
+          @click.prevent="addNew"
+      >
+        SAVE
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+
 </template>
 
 <script>
@@ -42,12 +56,11 @@ import {mapGetters} from "vuex";
 export default {
   name: "CostsForm",
   props:{
-    // list: Object,
-    values: Object
+    values: Object,
+    dialog: Boolean
   },
   data() {
     return {
-      showForm: true,
       newCost: {
         desc: "",
         category:"",
@@ -84,12 +97,17 @@ export default {
       if(this.getPaymentList.find(el => el.id === this.newCost.id)) {
         console.log("в листе есть такой уже")
         this.$modal.hide()
+
       } else {
         this.$store.commit("addDataToPaymentList", obj)
         this.$modal.hide()
+
       }
 
-    }
+      this.$emit("closeForm")
+
+    },
+
   },
 
   watch: {
