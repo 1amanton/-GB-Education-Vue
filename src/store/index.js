@@ -12,7 +12,6 @@ const mutations = {
     },
     deleteDataFromPaymentList(state, payload) {
         state.paymentList = state.paymentList.filter(el => el.id !== payload.id)
-        console.log(state.availableCategoryList)
     },
     setChangeToPaymentList(state, payload) {
         let findedEl = state.paymentList.find(el => el.id === payload.id)
@@ -21,10 +20,6 @@ const mutations = {
         findedEl.value = payload.money
         findedEl.category = payload.category
         findedEl.desc = payload.desc
-
-        console.log('ПОСЛЕ ИЗМЕНЕНИЙ')
-        console.log(state.paymentList)
-
     },
     setCategoryList(state, payload) {
         state.categoryList = payload
@@ -39,37 +34,28 @@ const getters = {
         return state.paymentList.reduce((res, cur) => res + cur.value, 0)
     },
 
-    getAvailableCategoryList: state => {
-        console.log("get Available CategoryList")
-        let c = []
-        state.paymentList.forEach(el => {
-            if(c.find(item => item === el.category)) {
-                console.log("Категория уже есть в списке")
-            } else {
-                c.push(el.category)
-            }
-        })
-        return c
-    },
-
-
-
     getCountCategory: state => {
-        console.log("availableCategoryList:", state.availableCategoryList)
+        const groupBy = (arr, property) => {
+            return arr.reduce((items, obj) => {
+                let key = obj[property]
 
-        this.categoryList.forEach(category => {
-            let eachCategory = state.paymentList.reduce((items, payment) => {
-                if(payment.category === category) {
-                    // console.log(category)
-                    items.push(payment)
+                if (!items[key]) {
+                    items[key] = {title: key, counter: 0, value: 0}
                 }
+
+                items[key].counter++
+                items[key].value += obj.value
                 return items
-            }, [])
+            },{})
 
-            console.log("eachCategory", eachCategory)
-            console.log("eachCategory length", eachCategory.length)
+        }
+        let z = groupBy(state.paymentList, "category")
 
-        })
+        let vls = Object.values(z)
+        console.log(vls)
+
+        return vls
+
     },
 
 }
@@ -230,6 +216,27 @@ export default new Vuex.Store ({
                                 desc: "Тренировка",
                                 category: "Sport",
                                 value: 99
+                            },
+                            {
+                                id: 20,
+                                dateCreated: "22/04/2022",
+                                desc: "Кино",
+                                category: "Entertainment",
+                                value: 49
+                            },
+                            {
+                                id: 21,
+                                dateCreated: "22/04/2022",
+                                desc: "Кино",
+                                category: "Entertainment",
+                                value: 49
+                            },
+                            {
+                                id: 22,
+                                dateCreated: "21/04/2022",
+                                desc: "Завтрак",
+                                category: "Food",
+                                value: 199
                             }
                         ]
                     )

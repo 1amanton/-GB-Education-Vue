@@ -11,8 +11,23 @@
         :width="width"
         :height="height"
     />
-    <div>Total Costs: {{getFPV}} </div>
-    <div>A C: {{this.availableCategoryList }} </div>
+    <v-row class="mt-8 light-green">
+      <v-col :cols="3">#</v-col>
+      <v-col :cols="3">Category</v-col>
+      <v-col :cols="3">Total money</v-col>
+      <v-col :cols="3">Counter</v-col>
+    </v-row>
+
+    <v-row class="monochrome" v-for="(item, index) in getCountCategory" :key="index">
+      <v-col :cols="3">{{index + 1}}</v-col>
+      <v-col :cols="3">{{item.title}}</v-col>
+      <v-col :cols="3">{{item.value}} $</v-col>
+      <v-col :cols="3">{{item.counter}}</v-col>
+    </v-row>
+
+    <v-row class="light-green lighten-1 font-weight-bold text-right">
+      <v-col :cols="12">Total Costs: {{getFPV}} $</v-col>
+    </v-row>
   </div>
 
 </template>
@@ -44,18 +59,30 @@ export default {
     getFPV() {
       return this.$store.getters.getFullPaymentValue
     },
+    getCategoryCount() {
+      return this.getCountCategory.map(el => el.counter)
+    },
+    getCategoryAll() {
+      return this.getCountCategory.map(el => el.title)
+    },
+    getCategoryMoney() {
+      return this.getCountCategory.map(el => {
+        return `${el.title } : ${el.value} $`
+      })
+    },
     ...mapGetters({
       list: "getPaymentList",
-      categoryList: "getCategoryList",
-
-      availableCategoryList: "getAvailableCategoryList",
       getCountCategory: "getCountCategory"
     })
   },
   watch: {
-    availableCategoryList() {
-      this.chartData.labels = this.availableCategoryList
+    getCategoryAll() {
+      this.chartData.labels = this.getCategoryAll
+    },
+    getCategoryCount() {
+      this.chartData.datasets[0].data = this.getCategoryCount
     }
+
   },
   props: {
     chartId: {
@@ -111,36 +138,16 @@ export default {
     console.log("created")
     await this.$store.dispatch("fetchCategoryList")
     await this.$store.dispatch("fetchPaymentList")
-
-    this.getB(this.list)
-
   },
 
   methods: {
-
-    getB(list) {
-      this.categoryList.forEach(category => {
-        let eachCategory = list.reduce((items, payment) => {
-          if(payment.category === category) {
-            // console.log(category)
-            items.push(payment)
-          }
-          return items
-        }, [])
-
-        console.log("eachCategory", eachCategory)
-        console.log("eachCategory length", eachCategory.length)
-        console.log("COUNT ARRAY", this.chartData.datasets[0].data)
-
-        this.chartData.datasets[0].data.push(eachCategory.length)
-
-      })
-    },
-
   },
 
   mounted() {
-
   }
 }
 </script>
+<style lang="sass" scoped>
+.monochrome:nth-child(even)
+  background-color: #919191
+</style>

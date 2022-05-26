@@ -72,7 +72,8 @@ export default {
   computed: {
     ...mapGetters({
       categoryList: "getCategoryList",
-      getPaymentList: "getPaymentList"
+      getPaymentList: "getPaymentList",
+      getCountCategory: "getCountCategory"
     }),
 
     getCurrentDate() {
@@ -101,7 +102,6 @@ export default {
       } else {
         this.$store.commit("addDataToPaymentList", obj)
         this.$modal.hide()
-
       }
 
       this.$emit("closeForm")

@@ -63,10 +63,9 @@ export default {
 
   data() {
     return {
-
       dialog: false,
       currentPage: 1,
-      showElements: 5
+      showElements: 6
     }
   },
 
